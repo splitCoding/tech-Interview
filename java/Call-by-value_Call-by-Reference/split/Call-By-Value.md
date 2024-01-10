@@ -1,5 +1,7 @@
 # Call-By-Value 
 
+## [정리된 블로그 글 바로가기](https://not-studying-solving.tistory.com/category/Java)
+
 ## Java 의 파라미터 전달 방법
 
 자바는 메서드를 호출할 때 파라미터를 전달하는 방법으로 Call By Value 를 사용합니다. <br>
@@ -20,34 +22,21 @@ class CallByValueTest {
 
     @Test
     void test() {
-        //원시 타입
+        //given
         int number = 0;
-        //참조 타입
         Member member = new Member("split");
 
-        //number 를 10으로 변경
-        changeNumberTo10(number);
+        //when
+        changeMemberToAkoAndNumberTo10(member, number); //number 를 10으로 변경
+
+        //then
+        assertThat(member).isNotEqualTo(ako);
         assertThat(number).isNotEqualTo(10);
-
-        //split 멤버 참조변수를 ako 멤버 참조변수로 변경
-        changeMemberToAko(member);
-        assertThat(member.name).isNotEqualTo(ako.name);
-
-        //매세드내에서 split 멤버 참조변수내의 이름 변경
-        changeNickname(member, ako.name);
-        assertThat(member.name).isEqualTo(ako.name);
     }
 
-    private void changeNumberTo10(int number) {
-        number = 10;
-    }
-
-    private void changeMemberToAko(Member member) {
+    private void changeMemberToAkoAndNumberTo10(Member member, int number) {
         member = ako;
-    }
-
-    private void changeNickname(final Member member, final String newNickname) {
-        member.name = newNickname;
+        number = 10;
     }
 
     private static class Member {
@@ -61,7 +50,7 @@ class CallByValueTest {
 }
 ```
 
-### JVM 메모리 변수가 저장 위치
+### JVM 메모리 변수 저장 위치
 Java 에서는 함수에서 사용되는 지역변수, 인자들은 Stack 영역에 저장됩니다.
 - 참조 변수는 HEAP 영역에 저장된 뒤에 해당 주소값을 가르키는 변수가 Stack 영역에 저장됩니다.
 
@@ -75,5 +64,10 @@ Java 에서는 함수에서 사용되는 지역변수, 인자들은 Stack 영역
     <img src="./image/call-by-value-after.png" style="text-align: center" width="600">
 </div>
 
-- Call-by-Value의 장점은 값을 복사하기 때문에 원래 값의 불변성을 보장합니다.
-- Call-by-Value의 단점은 값을 복사하기 때문에 메모리 사용량이 늘어납니다.
+## Call-by-Value의 장단점
+### 장점
+**값을 복사하기 때문에 원래 값의 불변성을 보장합니다.**
+만약 메서드에서 변수의 원래값에 접근이 가능하다면 작업중에 다른 메서드에서 변수의 값을 변경하게 되어 문제가 발생할 수 있습니다. 변수에 한개의 메서드만 접근이 가능하도록 하여 해결할 수 있지만 이는 개발 리소스를 추가할 뿐만 아니라 성능 저하를 일으키게 됩니다.
+
+### 단점
+값을 복사하기 때문에 메모리 사용량이 늘어납니다.
